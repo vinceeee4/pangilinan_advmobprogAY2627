@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "T-Shirt",
+    "price": 22.3,
+    "description": "Casual tee with a comfortable fit for everyday wear.",
+    "category": "Apparel",
+    "image": "https://down-ph.img.susercontent.com/file/sg-11134201-22100-wxxz5nvzpbiv99",
+    "rating": {"rate": 4.1, "count": 259}
+  },
+  {
+    "id": 2,
+    "title": "Jacket",
+    "price": 55.99,
+    "description": "A reliable jacket for cooler weather and versatile styling.",
+    "category": "Outerwear",
+    "image": "https://down-ph.img.susercontent.com/file/ph-11134207-7r98o-lkmmolyrut6pe8",
+    "rating": {"rate": 4.7, "count": 500}
+  },
+  {
+    "id": 3,
+    "title": "ID Lace",
+    "price": 168.0,
+    "description": "Premium accessory lace designed for ID and badge display.",
+    "category": "Accessories",
+    "image": "https://th.bing.com/th/id/OIP.i4D8WgvdZOXjErFEGi9BiwHaHa?w=209&h=209&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+    "rating": {"rate": 3.9, "count": 70}
+  }
+]
