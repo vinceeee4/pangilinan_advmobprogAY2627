@@ -1,7 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 import '../models/product_model.dart';
+import '../models/cart.dart';
+import '../services/cart_service.dart';
 import '../widgets/custom_text.dart';
 
 class DetailsScreen extends StatelessWidget {
@@ -9,12 +11,33 @@ class DetailsScreen extends StatelessWidget {
 
   const DetailsScreen({super.key, required this.product});
 
+  // Enhancement 3: Adds this product through DummyJSON's simulated /carts/add endpoint.
+  Future<void> _addToCart(BuildContext context) async {
+    try {
+      await CartService().addToCart(
+        userId: kTestUserId,
+        products: <CartProductRequest>[
+          CartProductRequest(id: product.id, quantity: 1),
+        ],
+      );
+      if (context.mounted)
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Product sent to DummyJSON cart simulation.'),
+          ),
+        );
+    } catch (error) {
+      if (context.mounted)
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.toString())));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Product Details'),
-      ),
+      appBar: AppBar(title: const Text('Product Details')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(kDefaultPadding),
         child: Column(
@@ -28,20 +51,43 @@ class DetailsScreen extends StatelessWidget {
                   product.image,
                   height: 250,
                   fit: BoxFit.contain,
-                  errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) => const Icon(Icons.broken_image, size: 120),
+                  errorBuilder:
+                      (
+                        BuildContext context,
+                        Object error,
+                        StackTrace? stackTrace,
+                      ) => const Icon(Icons.broken_image, size: 120),
                 ),
               ),
             ),
             const SizedBox(height: kDefaultPadding),
             CustomText(product.title, style: kProductTitleStyle),
             const SizedBox(height: 8),
-            CustomText('Category: ${product.category}', style: kProductSubtitleStyle),
+            CustomText(
+              'Category: ${product.category}',
+              style: kProductSubtitleStyle,
+            ),
             const SizedBox(height: 8),
-            CustomText('Price: $kCurrencySymbol${product.pricePhp.toStringAsFixed(2)}', style: kProductPriceStyle),
+            CustomText(
+              'Price: $kCurrencySymbol${product.pricePhp.toStringAsFixed(2)}',
+              style: kProductPriceStyle,
+            ),
             const SizedBox(height: 8),
-            CustomText('Rating: ${product.rating.rate} (${product.rating.count} reviews)', style: kProductSubtitleStyle),
+            CustomText(
+              'Rating: ${product.rating.rate} (${product.rating.count} reviews)',
+              style: kProductSubtitleStyle,
+            ),
             const SizedBox(height: kDefaultPadding),
             CustomText(product.description),
+            const SizedBox(height: kDefaultPadding),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => _addToCart(context),
+                icon: const Icon(Icons.add_shopping_cart),
+                label: const Text('Add to Cart'),
+              ),
+            ),
           ],
         ),
       ),

@@ -13,6 +13,6 @@ void main() {
   testWidgets('App shows home title', (WidgetTester tester) async {
     await tester.pumpWidget(const App());
 
-    expect(find.text('Lab Activity 2'), findsOneWidget);
+    expect(find.text('Lab Activity 3'), findsOneWidget);
   });
 }
