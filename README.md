@@ -8,6 +8,12 @@ For Lab Activity 3, I kept the existing model, service, provider, screen, and wi
 
 The chat action is now a FloatingActionButton on the normal home screen. The cart uses its own scaffold without that button, so the chat FAB is hidden while viewing the cart and returns after navigating back. The product detail screen also sends product IDs and quantities to DummyJSON's simulated add-cart endpoint. This response is handled as a test API result, not a permanent saved cart. The project was checked with Flutter dependency resolution, analysis, and widget tests after the changes.
 
+## Lab Activity 4: Discussion
+
+For Lab Activity 4, I added a User model and UserService to keep the authentication work separate from the screens. The sign-in screen sends credentials to the DummyJSON authentication endpoint, then UserService stores the returned user information in SharedPreferences. The splash screen checks the saved session when the app starts, so it opens Home for an authenticated user or Sign In when no session is saved.
+
+The profile screen reads the saved User data asynchronously and displays the account image, name, email, gender, username, and user ID. The cart screen now gets that saved user ID before calling the existing cart service, which means it requests the cart for the signed-in account rather than using a fixed test ID. Logout removes only the stored authentication data, preserving the rest of the application settings. This keeps the updated design pattern clear: models represent data, services handle API and storage work, and screens focus on the interface and navigation.
+
 ## Lab Activity 2 Discussion
 
 I refactored the app to use a clean folder structure with constants, models, services, providers, screens, and widgets. The product data is loaded from a sample API and shown in a list with a search bar and details page.

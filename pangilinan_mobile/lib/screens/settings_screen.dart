@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../constants/constants.dart';
 import '../providers/theme_provider.dart';
 import '../widgets/custom_text.dart';
+import '../services/user_service.dart';
+import 'signin_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -13,9 +15,7 @@ class SettingsScreen extends StatelessWidget {
     final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
+      appBar: AppBar(title: const Text('Settings')),
       body: Padding(
         padding: const EdgeInsets.all(kDefaultPadding),
         child: Column(
@@ -30,11 +30,26 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: kDefaultPadding),
             const CustomText('About App', style: kProductTitleStyle),
             const SizedBox(height: 8),
-            const CustomText('This app shows products from a sample API with search, details, and theme switching.'),
+            const CustomText(
+              'This app shows products from a sample API with search, details, and theme switching.',
+            ),
             const SizedBox(height: kDefaultPadding),
             const CustomText('Version', style: kProductTitleStyle),
             const SizedBox(height: 8),
             const CustomText('1.0.0'),
+            const SizedBox(height: kDefaultPadding),
+            OutlinedButton.icon(
+              icon: const Icon(Icons.logout),
+              label: const Text('Log Out'),
+              onPressed: () async {
+                await UserService().logout();
+                if (!context.mounted) return;
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute<void>(builder: (_) => const SignInScreen()),
+                  (_) => false,
+                );
+              },
+            ),
           ],
         ),
       ),

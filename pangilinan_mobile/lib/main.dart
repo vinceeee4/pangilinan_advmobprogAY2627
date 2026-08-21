@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'constants/constants.dart';
 import 'providers/theme_provider.dart';
 import 'screens/home_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
   runApp(const App());
@@ -32,7 +33,7 @@ class App extends StatelessWidget {
               scaffoldBackgroundColor: kDarkBackground,
               appBarTheme: const AppBarTheme(backgroundColor: Colors.black87),
             ),
-            home: const HomeScreen(),
+            home: const SplashScreen(),
           );
         },
       ),
