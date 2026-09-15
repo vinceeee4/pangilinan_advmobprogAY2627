@@ -1,25 +1,30 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 
+import '../constants/constants.dart';
 import '../models/product_model.dart';
 
 class ProductService {
   Future<List<ProductModel>> fetchProducts() async {
     try {
-      final String body = await rootBundle.loadString('assets/products.json');
-      final dynamic jsonData = jsonDecode(body);
+      final http.Response response = await http.get(Uri.parse(kApiUrl));
 
-      if (jsonData is List) {
-        return jsonData
-            .map((dynamic item) => ProductModel.fromJson(item as Map<String, dynamic>?))
-            .toList();
+      if (response.statusCode != 200) {
+        throw Exception('Server returned status ${response.statusCode}.');
       }
 
-      throw Exception('Invalid local product data.');
+      final dynamic jsonData = jsonDecode(response.body);
+      final List<dynamic> rawProducts = jsonData is Map<String, dynamic>
+          ? (jsonData['products'] as List<dynamic>? ?? <dynamic>[])
+          : (jsonData is List ? jsonData : <dynamic>[]);
+
+      return rawProducts
+          .map((dynamic item) => ProductModel.fromJson(item as Map<String, dynamic>?))
+          .toList();
     } catch (error) {
-      throw Exception('Unable to load local products: $error');
+      throw Exception('Unable to load products: $error');
     }
   }
 }
