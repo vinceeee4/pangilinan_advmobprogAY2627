@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 const String kAppTitle = 'Lab Activity 3';
-const String kApiUrl = 'https://fakestoreapi.com/products';
 const String kDummyJsonBaseUrl = 'https://dummyjson.com';
+const String kApiUrl = '$kDummyJsonBaseUrl/products';
 const int kTestUserId = 5;
 const String kCurrencySymbol = '₱';
 const double kUsdToPhpConversionRate = 56.0;
