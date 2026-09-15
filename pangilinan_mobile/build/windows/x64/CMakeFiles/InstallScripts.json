@@ -1,9 +1,9 @@
 {
 	"InstallScripts" : 
 	[
-		"C:/Users/vince/OneDrive/Desktop/SchoolProjects/pangilinan_advmobprogAY2627/pangilinan_mobile/build/windows/x64/cmake_install.cmake",
-		"C:/Users/vince/OneDrive/Desktop/SchoolProjects/pangilinan_advmobprogAY2627/pangilinan_mobile/build/windows/x64/flutter/cmake_install.cmake",
-		"C:/Users/vince/OneDrive/Desktop/SchoolProjects/pangilinan_advmobprogAY2627/pangilinan_mobile/build/windows/x64/runner/cmake_install.cmake"
+		"C:/Users/vince/OneDrive/Desktop/pangilinan_advmobprogAY2627/pangilinan_mobile/build/windows/x64/cmake_install.cmake",
+		"C:/Users/vince/OneDrive/Desktop/pangilinan_advmobprogAY2627/pangilinan_mobile/build/windows/x64/flutter/cmake_install.cmake",
+		"C:/Users/vince/OneDrive/Desktop/pangilinan_advmobprogAY2627/pangilinan_mobile/build/windows/x64/runner/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

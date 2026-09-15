@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\Users\vince\OneDrive\Desktop\SchoolProjects\pangilinan_advmobprogAY2627\pangilinan_mobile\build\windows\x64\CMakeFiles\cfb2101aae4945363971991319be3ae0\flutter_windows.dll.rule">
+    <CustomBuild Include="C:\Users\vince\OneDrive\Desktop\pangilinan_advmobprogAY2627\pangilinan_mobile\build\windows\x64\CMakeFiles\384820ca7f2165da0280b8d081673b06\flutter_windows.dll.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
-    <CustomBuild Include="C:\Users\vince\OneDrive\Desktop\SchoolProjects\pangilinan_advmobprogAY2627\pangilinan_mobile\build\windows\x64\CMakeFiles\69d34dc2cdb3292a6589367617550d06\flutter_assemble.rule">
+    <CustomBuild Include="C:\Users\vince\OneDrive\Desktop\pangilinan_advmobprogAY2627\pangilinan_mobile\build\windows\x64\CMakeFiles\61cb8a9a6c63453bdc5c1d77580464f4\flutter_assemble.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
-    <CustomBuild Include="C:\Users\vince\OneDrive\Desktop\SchoolProjects\pangilinan_advmobprogAY2627\pangilinan_mobile\windows\flutter\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\vince\OneDrive\Desktop\pangilinan_advmobprogAY2627\pangilinan_mobile\windows\flutter\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\Users\vince\OneDrive\Desktop\SchoolProjects\pangilinan_advmobprogAY2627\pangilinan_mobile\build\windows\x64\flutter\CMakeFiles\flutter_assemble" />
+    <None Include="C:\Users\vince\OneDrive\Desktop\pangilinan_advmobprogAY2627\pangilinan_mobile\build\windows\x64\flutter\CMakeFiles\flutter_assemble" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{85FFDB46-6AB9-30D3-91A6-C4FD4A1F6A9E}</UniqueIdentifier>
+      <UniqueIdentifier>{043054B5-8137-3AED-9565-FFDE96A8C6BB}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

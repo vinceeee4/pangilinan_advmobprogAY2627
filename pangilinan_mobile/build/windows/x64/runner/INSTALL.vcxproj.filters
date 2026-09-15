@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\Users\vince\OneDrive\Desktop\SchoolProjects\pangilinan_advmobprogAY2627\pangilinan_mobile\build\windows\x64\CMakeFiles\9cde5890d612c869b19c5bff0ec9d0a8\INSTALL_force.rule">
+    <CustomBuild Include="C:\Users\vince\OneDrive\Desktop\pangilinan_advmobprogAY2627\pangilinan_mobile\build\windows\x64\CMakeFiles\e6524b9d3b30f950f86db92fd0192807\INSTALL_force.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{85FFDB46-6AB9-30D3-91A6-C4FD4A1F6A9E}</UniqueIdentifier>
+      <UniqueIdentifier>{043054B5-8137-3AED-9565-FFDE96A8C6BB}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
-^C:\USERS\VINCE\ONEDRIVE\DESKTOP\SCHOOLPROJECTS\PANGILINAN_ADVMOBPROGAY2627\PANGILINAN_MOBILE\BUILD\WINDOWS\X64\CMAKEFILES\C207A5BA60696F3D103CA5822D748E95\GENERATE.STAMP.RULE
+^C:\USERS\VINCE\ONEDRIVE\DESKTOP\PANGILINAN_ADVMOBPROGAY2627\PANGILINAN_MOBILE\BUILD\WINDOWS\X64\CMAKEFILES\AFBD9985AC3AEC12039950647E5ECEED\GENERATE.STAMP.RULE
 setlocal
-"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/vince/OneDrive/Desktop/SchoolProjects/pangilinan_advmobprogAY2627/pangilinan_mobile/windows -BC:/Users/vince/OneDrive/Desktop/SchoolProjects/pangilinan_advmobprogAY2627/pangilinan_mobile/build/windows/x64 --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/vince/OneDrive/Desktop/SchoolProjects/pangilinan_advmobprogAY2627/pangilinan_mobile/build/windows/x64/pangilinan_mobile.slnx
+"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/vince/OneDrive/Desktop/pangilinan_advmobprogAY2627/pangilinan_mobile/windows -BC:/Users/vince/OneDrive/Desktop/pangilinan_advmobprogAY2627/pangilinan_mobile/build/windows/x64 --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/vince/OneDrive/Desktop/pangilinan_advmobprogAY2627/pangilinan_mobile/build/windows/x64/pangilinan_mobile.slnx
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

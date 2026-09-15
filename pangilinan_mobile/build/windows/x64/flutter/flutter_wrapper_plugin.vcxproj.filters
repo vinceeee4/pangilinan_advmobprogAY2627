@@ -1,25 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\vince\OneDrive\Desktop\SchoolProjects\pangilinan_advmobprogAY2627\pangilinan_mobile\windows\flutter\ephemeral\cpp_client_wrapper\core_implementations.cc">
+    <ClCompile Include="C:\Users\vince\OneDrive\Desktop\pangilinan_advmobprogAY2627\pangilinan_mobile\windows\flutter\ephemeral\cpp_client_wrapper\core_implementations.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\vince\OneDrive\Desktop\SchoolProjects\pangilinan_advmobprogAY2627\pangilinan_mobile\windows\flutter\ephemeral\cpp_client_wrapper\standard_codec.cc">
+    <ClCompile Include="C:\Users\vince\OneDrive\Desktop\pangilinan_advmobprogAY2627\pangilinan_mobile\windows\flutter\ephemeral\cpp_client_wrapper\standard_codec.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\vince\OneDrive\Desktop\SchoolProjects\pangilinan_advmobprogAY2627\pangilinan_mobile\windows\flutter\ephemeral\cpp_client_wrapper\plugin_registrar.cc">
+    <ClCompile Include="C:\Users\vince\OneDrive\Desktop\pangilinan_advmobprogAY2627\pangilinan_mobile\windows\flutter\ephemeral\cpp_client_wrapper\plugin_registrar.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\vince\OneDrive\Desktop\SchoolProjects\pangilinan_advmobprogAY2627\pangilinan_mobile\windows\flutter\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\vince\OneDrive\Desktop\pangilinan_advmobprogAY2627\pangilinan_mobile\windows\flutter\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{85FFDB46-6AB9-30D3-91A6-C4FD4A1F6A9E}</UniqueIdentifier>
+      <UniqueIdentifier>{043054B5-8137-3AED-9565-FFDE96A8C6BB}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{5C631C2E-2617-39AC-9741-2D212F41241E}</UniqueIdentifier>
+      <UniqueIdentifier>{3FA4DAC0-9C8B-3482-9874-D7327FA0B7EB}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
