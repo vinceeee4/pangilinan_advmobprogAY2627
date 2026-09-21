@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
+
 import '../constants/constants.dart';
 import '../services/user_service.dart';
 import 'home_screen.dart';
+import 'signup_screen.dart';
 
-// Enhancement 2: Custom sign-in UI uses UserService and saves the authenticated session.
+// Enhancement 2: Sign-in now supports both backends discussed in the Lab
+// Activity 5 write-up - the original DummyJSON REST login, and Firebase
+// Auth's email/password sign-in, switched with a segmented control.
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
   @override
@@ -12,15 +17,23 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _username = TextEditingController(text: 'emilys');
+  final TextEditingController _username = TextEditingController(
+    text: 'emilys',
+  );
   final TextEditingController _password = TextEditingController(
     text: 'emilyspass',
   );
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _firebasePassword = TextEditingController();
   bool _loading = false;
+  bool _useFirebase = false;
+
   @override
   void dispose() {
     _username.dispose();
     _password.dispose();
+    _email.dispose();
+    _firebasePassword.dispose();
     super.dispose();
   }
 
@@ -28,16 +41,28 @@ class _SignInScreenState extends State<SignInScreen> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     setState(() => _loading = true);
     try {
-      await UserService().loginUser(_username.text.trim(), _password.text);
+      if (_useFirebase) {
+        await UserService().signIn(
+          email: _email.text.trim(),
+          password: _firebasePassword.text,
+        );
+      } else {
+        await UserService().loginUser(_username.text.trim(), _password.text);
+      }
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(builder: (_) => const HomeScreen()),
       );
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      if (mounted)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? 'Firebase sign-in failed.')),
+        );
     } catch (_) {
       if (mounted)
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Sign in failed. Check your username and password.'),
+            content: Text('Sign in failed. Check your credentials.'),
           ),
         );
     } finally {
@@ -68,31 +93,87 @@ class _SignInScreenState extends State<SignInScreen> {
                   'Sign in to view your account and cart.',
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 28),
-                TextFormField(
-                  controller: _username,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (String? value) =>
-                      value == null || value.trim().isEmpty
-                      ? 'Enter your username'
-                      : null,
+                const SizedBox(height: 20),
+                SegmentedButton<bool>(
+                  segments: const <ButtonSegment<bool>>[
+                    ButtonSegment<bool>(
+                      value: false,
+                      label: Text('DummyJSON'),
+                    ),
+                    ButtonSegment<bool>(value: true, label: Text('Firebase')),
+                  ],
+                  selected: <bool>{_useFirebase},
+                  onSelectionChanged: (Set<bool> selection) =>
+                      setState(() => _useFirebase = selection.first),
                 ),
+                const SizedBox(height: 20),
+                if (!_useFirebase) ...<Widget>[
+                  TextFormField(
+                    controller: _username,
+                    decoration: const InputDecoration(
+                      labelText: 'Username',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (String? value) =>
+                        value == null || value.trim().isEmpty
+                        ? 'Enter your username'
+                        : null,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _password,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (String? value) =>
+                        value == null || value.isEmpty
+                        ? 'Enter your password'
+                        : null,
+                  ),
+                ] else ...<Widget>[
+                  TextFormField(
+                    controller: _email,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: 'Email address',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (String? value) =>
+                        value == null || !value.contains('@')
+                        ? 'Enter a valid email'
+                        : null,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _firebasePassword,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (String? value) =>
+                        value == null || value.isEmpty
+                        ? 'Enter your password'
+                        : null,
+                  ),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: _loading
+                          ? null
+                          : () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => const SignUpScreen(),
+                              ),
+                            ),
+                      child: const Text("Don't have an account? Sign up"),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 16),
-                TextFormField(
-                  controller: _password,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (String? value) => value == null || value.isEmpty
-                      ? 'Enter your password'
-                      : null,
-                ),
-                const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: _loading ? null : _signIn,
                   child: Padding(

@@ -1,11 +1,23 @@
 import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../constants/constants.dart';
+import '../models/firebase_profile.dart';
+import '../models/login_type.dart';
+import '../models/profile_data.dart';
 import '../models/user.dart';
 
 class UserService {
   static const String _userKey = 'authenticated_user';
+  static const String _loginTypeKey = 'login_type';
+  static const String _firebaseProfilePrefix = 'firebase_profile_';
+
+  // ---------------------------------------------------------------------
+  // Lab Activity 4: DummyJSON authentication
+  // ---------------------------------------------------------------------
 
   Future<User> loginUser(String username, String password) async {
     final http.Response response = await http
@@ -25,8 +37,10 @@ class UserService {
     if (body is! Map<String, dynamic>)
       throw Exception('Invalid sign-in response.');
     final User user = User.fromJson(body);
-    if (user.id == 0) throw Exception('The account did not include a user ID.');
+    if (user.id == 0)
+      throw Exception('The account did not include a user ID.');
     await saveUser(user);
+    await setLoginType(LoginType.dummyJson);
     return user;
   }
 
@@ -35,6 +49,7 @@ class UserService {
         _userKey,
         jsonEncode(user.toJson()),
       );
+
   Future<User?> getUser() async {
     final String? value = (await SharedPreferences.getInstance()).getString(
       _userKey,
@@ -48,7 +63,164 @@ class UserService {
     }
   }
 
-  Future<bool> isLoggedIn() async => (await getUser()) != null;
   Future<void> logout() async =>
       (await SharedPreferences.getInstance()).remove(_userKey);
+
+  // ---------------------------------------------------------------------
+  // Lab Activity 5, Enhancement 1: Firebase Authentication
+  // Your previous code here
+  // Just add this code under the previous code
+  // ---------------------------------------------------------------------
+
+  final firebase_auth.FirebaseAuth firebaseAuth =
+      firebase_auth.FirebaseAuth.instance;
+
+  firebase_auth.User? get currentFirebaseUser => firebaseAuth.currentUser;
+
+  Stream<firebase_auth.User?> get authStateChanges =>
+      firebaseAuth.authStateChanges();
+
+  Future<firebase_auth.UserCredential> signIn({
+    required String email,
+    required String password,
+  }) async {
+    final firebase_auth.UserCredential credential = await firebaseAuth
+        .signInWithEmailAndPassword(email: email, password: password);
+    await setLoginType(LoginType.firebase);
+    return credential;
+  }
+
+  Future<firebase_auth.UserCredential> createAccount({
+    required String email,
+    required String password,
+  }) async {
+    final firebase_auth.UserCredential credential = await firebaseAuth
+        .createUserWithEmailAndPassword(email: email, password: password);
+    await setLoginType(LoginType.firebase);
+    return credential;
+  }
+
+  Future<void> signOut() async => firebaseAuth.signOut();
+
+  Future<void> updateUsername({required String username}) async {
+    await currentFirebaseUser!.updateDisplayName(username);
+    await currentFirebaseUser!.reload();
+  }
+
+  Future<void> deleteAccount({
+    required String email,
+    required String password,
+  }) async {
+    final firebase_auth.AuthCredential credential = firebase_auth
+        .EmailAuthProvider.credential(email: email, password: password);
+    final firebase_auth.User user = currentFirebaseUser!;
+    final String uid = user.uid;
+
+    await user.reauthenticateWithCredential(credential);
+    await user.delete();
+    await firebaseAuth.signOut();
+    await _clearFirebaseProfile(uid);
+    (await SharedPreferences.getInstance()).remove(_loginTypeKey);
+  }
+
+  Future<void> resetPasswordFromCurrentPassword({
+    required String currentPassword,
+    required String newPassword,
+    required String email,
+  }) async {
+    final firebase_auth.AuthCredential credential = firebase_auth
+        .EmailAuthProvider.credential(
+          email: email,
+          password: currentPassword,
+        );
+    await currentFirebaseUser!.reauthenticateWithCredential(credential);
+    await currentFirebaseUser!.updatePassword(newPassword);
+  }
+
+  // ---------------------------------------------------------------------
+  // Enhancement 2 & 3: Session + profile helpers shared by both backends
+  // ---------------------------------------------------------------------
+
+  Future<void> setLoginType(LoginType type) async =>
+      (await SharedPreferences.getInstance()).setString(
+        _loginTypeKey,
+        type == LoginType.firebase ? 'firebase' : 'dummyJson',
+      );
+
+  Future<LoginType?> getLoginType() async {
+    final String? value = (await SharedPreferences.getInstance()).getString(
+      _loginTypeKey,
+    );
+    if (value == 'firebase') return LoginType.firebase;
+    if (value == 'dummyJson') return LoginType.dummyJson;
+    return null;
+  }
+
+  /// Add Logout button -> clears session/token and redirects to login.
+  /// Ends whichever session is active and clears the saved login type, so
+  /// one Logout button in Settings/Profile works for both backends.
+  Future<void> endSession() async {
+    final LoginType? type = await getLoginType();
+    if (type == LoginType.firebase) {
+      await signOut();
+    } else {
+      await logout();
+    }
+    (await SharedPreferences.getInstance()).remove(_loginTypeKey);
+  }
+
+  /// True when either a DummyJSON session was saved or Firebase still has a
+  /// signed-in user - used by the splash screen's persistent-login check.
+  Future<bool> isLoggedIn() async {
+    final LoginType? type = await getLoginType();
+    if (type == LoginType.firebase) return currentFirebaseUser != null;
+    if (type == LoginType.dummyJson) return (await getUser()) != null;
+    return false;
+  }
+
+  Future<void> saveFirebaseProfile(FirebaseProfile profile) async =>
+      (await SharedPreferences.getInstance()).setString(
+        '$_firebaseProfilePrefix${profile.uid}',
+        jsonEncode(profile.toJson()),
+      );
+
+  Future<FirebaseProfile?> getFirebaseProfile() async {
+    final firebase_auth.User? user = currentFirebaseUser;
+    if (user == null) return null;
+    final String? value = (await SharedPreferences.getInstance()).getString(
+      '$_firebaseProfilePrefix${user.uid}',
+    );
+    if (value == null) return null;
+    try {
+      final dynamic json = jsonDecode(value);
+      return json is Map<String, dynamic>
+          ? FirebaseProfile.fromJson(json)
+          : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _clearFirebaseProfile(String uid) async =>
+      (await SharedPreferences.getInstance()).remove(
+        '$_firebaseProfilePrefix$uid',
+      );
+
+  /// Enhancement 3: Single entry point the Profile screen calls - returns
+  /// the right data shape for whichever backend authenticated this session.
+  Future<ProfileData?> getUserData() async {
+    final LoginType? type = await getLoginType();
+    if (type == LoginType.firebase) {
+      final firebase_auth.User? user = currentFirebaseUser;
+      if (user == null) return null;
+      final FirebaseProfile? extras = await getFirebaseProfile();
+      return ProfileData.fromFirebase(user, extras);
+    }
+    if (type == LoginType.dummyJson) {
+      final User? user = await getUser();
+      if (user == null) return null;
+      return ProfileData.fromDummyJson(user);
+    }
+    return null;
+  }
 }

@@ -38,11 +38,13 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 8),
             const CustomText('1.0.0'),
             const SizedBox(height: kDefaultPadding),
+            // Enhancement 1: Logout now ends whichever session (DummyJSON or
+            // Firebase) is active, clears it, and redirects to Sign In.
             OutlinedButton.icon(
               icon: const Icon(Icons.logout),
               label: const Text('Log Out'),
               onPressed: () async {
-                await UserService().logout();
+                await UserService().endSession();
                 if (!context.mounted) return;
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute<void>(builder: (_) => const SignInScreen()),
