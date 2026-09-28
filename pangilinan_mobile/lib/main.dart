@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import 'constants/constants.dart';
@@ -20,28 +21,37 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ThemeProvider>(
-      create: (_) => ThemeProvider(),
-      child: Consumer<ThemeProvider>(
-        builder: (BuildContext context, ThemeProvider provider, Widget? child) {
-          return MaterialApp(
-            title: kAppTitle,
-            themeMode: provider.themeMode,
-            theme: ThemeData(
-              brightness: Brightness.light,
-              primaryColor: kPrimaryColor,
-              scaffoldBackgroundColor: kLightBackground,
-              appBarTheme: const AppBarTheme(backgroundColor: kPrimaryColor),
-            ),
-            darkTheme: ThemeData(
-              brightness: Brightness.dark,
-              scaffoldBackgroundColor: kDarkBackground,
-              appBarTheme: const AppBarTheme(backgroundColor: Colors.black87),
-            ),
-            home: const SplashScreen(),
-          );
-        },
-      ),
+    // Lab Activity 6: flutter_screenutil lets the chat screens' .w/.h/.sp
+    // sizing scale correctly across device sizes.
+    return ScreenUtilInit(
+      designSize: const Size(412, 715),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (BuildContext context, Widget? child) {
+        return ChangeNotifierProvider<ThemeProvider>(
+          create: (_) => ThemeProvider(),
+          child: Consumer<ThemeProvider>(
+            builder: (BuildContext context, ThemeProvider provider, Widget? child) {
+              return MaterialApp(
+                title: kAppTitle,
+                themeMode: provider.themeMode,
+                theme: ThemeData(
+                  brightness: Brightness.light,
+                  primaryColor: kPrimaryColor,
+                  scaffoldBackgroundColor: kLightBackground,
+                  appBarTheme: const AppBarTheme(backgroundColor: kPrimaryColor),
+                ),
+                darkTheme: ThemeData(
+                  brightness: Brightness.dark,
+                  scaffoldBackgroundColor: kDarkBackground,
+                  appBarTheme: const AppBarTheme(backgroundColor: Colors.black87),
+                ),
+                home: const SplashScreen(),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

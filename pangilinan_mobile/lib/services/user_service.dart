@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,6 +75,7 @@ class UserService {
 
   final firebase_auth.FirebaseAuth firebaseAuth =
       firebase_auth.FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   firebase_auth.User? get currentFirebaseUser => firebaseAuth.currentUser;
 
@@ -87,6 +89,17 @@ class UserService {
     final firebase_auth.UserCredential credential = await firebaseAuth
         .signInWithEmailAndPassword(email: email, password: password);
     await setLoginType(LoginType.firebase);
+    // Lab Activity 6: backfill/refresh this user's Firestore "Users" doc on
+    // every sign-in, so chat always has an up-to-date directory entry even
+    // for accounts created before the chat feature existed.
+    final FirebaseProfile? profile = await getFirebaseProfile();
+    await upsertFirestoreUser(
+      uid: credential.user!.uid,
+      email: credential.user!.email ?? email,
+      firstName: profile?.fName,
+      lastName: profile?.lName,
+      username: profile?.username,
+    );
     return credential;
   }
 
@@ -105,6 +118,12 @@ class UserService {
   Future<void> updateUsername({required String username}) async {
     await currentFirebaseUser!.updateDisplayName(username);
     await currentFirebaseUser!.reload();
+    // Keep the Firestore directory entry (used by chat) in sync too.
+    await upsertFirestoreUser(
+      uid: currentFirebaseUser!.uid,
+      email: currentFirebaseUser!.email ?? '',
+      username: username,
+    );
   }
 
   Future<void> deleteAccount({
@@ -120,6 +139,7 @@ class UserService {
     await user.delete();
     await firebaseAuth.signOut();
     await _clearFirebaseProfile(uid);
+    await _firestore.collection('Users').doc(uid).delete();
     (await SharedPreferences.getInstance()).remove(_loginTypeKey);
   }
 
@@ -135,6 +155,29 @@ class UserService {
         );
     await currentFirebaseUser!.reauthenticateWithCredential(credential);
     await currentFirebaseUser!.updatePassword(newPassword);
+  }
+
+  // ---------------------------------------------------------------------
+  // Lab Activity 6: Firestore "Users" directory used by the chat feature
+  // ---------------------------------------------------------------------
+
+  /// Mirrors the signed-in Firebase user into a Firestore 'Users' document
+  /// (doc id = uid), so the chat feature has a queryable, realtime list of
+  /// registered users to show in the chat list.
+  Future<void> upsertFirestoreUser({
+    required String uid,
+    required String email,
+    String? firstName,
+    String? lastName,
+    String? username,
+  }) async {
+    await _firestore.collection('Users').doc(uid).set(<String, dynamic>{
+      'uid': uid,
+      'email': email,
+      if (firstName != null) 'firstName': firstName,
+      if (lastName != null) 'lastName': lastName,
+      if (username != null) 'username': username,
+    }, SetOptions(merge: true));
   }
 
   // ---------------------------------------------------------------------

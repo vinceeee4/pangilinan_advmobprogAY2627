@@ -63,6 +63,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
           email: _email.text.trim(),
         ),
       );
+      // Lab Activity 6: mirror the new account into Firestore's 'Users'
+      // collection so it immediately shows up in everyone else's chat list.
+      await UserService().upsertFirestoreUser(
+        uid: uid,
+        email: _email.text.trim(),
+        firstName: _fName.text.trim(),
+        lastName: _lName.text.trim(),
+        username: _username.text.trim(),
+      );
       if (!mounted) return;
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute<void>(builder: (_) => const HomeScreen()),

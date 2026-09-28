@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const String kAppTitle = 'Lab Activity 3';
+const String kAppTitle = 'NubdExchange';
 const String kDummyJsonBaseUrl = 'https://dummyjson.com';
 const String kApiUrl = '$kDummyJsonBaseUrl/products';
 const int kTestUserId = 5;

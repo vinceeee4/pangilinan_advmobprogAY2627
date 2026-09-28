@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
-import 'product_screen.dart';
-import 'settings_screen.dart';
 import 'cart_screen.dart';
+import 'chat_screen.dart';
+import 'product_screen.dart';
 import 'profile_screen.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -58,23 +59,15 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: const ProductScreen(),
-      // Enhancement 2: Chat is a FAB and is not present on CartScreen's scaffold.
+      // Lab Activity 6, Enhancement 1 & 2: FAB now opens the real chat list
+      // (all registered users, minus the signed-in one, searchable by name
+      // or email) instead of the old placeholder dialog.
       floatingActionButton: FloatingActionButton(
         tooltip: 'Chat',
         child: const Icon(Icons.chat),
-        onPressed: () => showDialog<void>(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: const Text('Chat'),
-            content: const Text('Chat support is ready to help.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Close'),
-              ),
-            ],
-          ),
-        ),
+        onPressed: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute<void>(builder: (_) => const ChatScreen())),
       ),
     );
   }
